@@ -9,5 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface XYZViewController : UIViewController
+@property (nonatomic, strong) IBOutlet UIView *dropTarget;
+@property (nonatomic, strong) UIImageView *dragObject;
+@property (nonatomic, assign) CGPoint touchOffset;
+@property (nonatomic, assign) CGPoint homePosition;
 
 @end
