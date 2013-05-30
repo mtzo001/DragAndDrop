@@ -18,6 +18,8 @@
 //@synthesize dragObject;
 @synthesize touchOffset;
 @synthesize homePosition;
+@synthesize dropTargetImage;
+NSInteger flag = 0;
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if ([touches count] == 1) {
@@ -58,8 +60,18 @@
         touchPoint.y > self.dropTarget.frame.origin.y &&
         touchPoint.y < self.dropTarget.frame.origin.y + self.dropTarget.frame.size.height )
     {
-        if (self.dragObject.tag==1) {
-            self.dropTarget.backgroundColor = self.dragObject.backgroundColor;
+        if (self.dragObject.tag==0) {
+            [dropTargetImage setImage:([UIImage imageNamed:@"Button1.jpg"])];
+            flag=0;
+        } else if (self.dragObject.tag==1) {
+            [dropTargetImage setImage:([UIImage imageNamed:@"Buttonright.jpg"])];
+            flag=1;
+        } else if (self.dragObject.tag==2) {
+          [dropTargetImage setImage:([UIImage imageNamed:@"Button2.jpg"])];
+            flag=0;
+        } else if (self.dragObject.tag==3) {
+          [dropTargetImage setImage:([UIImage imageNamed:@"Button3.jpg"])];
+            flag=0;
         }
     }
     self.dragObject.frame = CGRectMake(self.homePosition.x, self.homePosition.y,
@@ -71,32 +83,31 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [dropTarget setBackgroundColor: [UIColor whiteColor]];
+    [dropTargetImage setBackgroundColor: [UIColor cyanColor]];
+    
     for (int i=0; i<4; i++) {
         
-        UIImageView *dragObject = [[UIImageView alloc] initWithFrame:CGRectMake(100+i*200, 100, 150, 75)];
+        
+        // creates the boxes
+        UIImageView *dragObject = [[UIImageView alloc] initWithFrame:CGRectMake(100+i*200, 100, 188, 41)];
         if (i==0) {
-            [dragObject setBackgroundColor:[UIColor orangeColor]];
+            [dragObject setImage:([UIImage imageNamed:@"Button1.jpg"])];
         } else if (i==1) {
-            [dragObject setBackgroundColor:[UIColor blueColor]];
+            [dragObject setImage:([UIImage imageNamed:@"Buttonright.jpg"])];
         } else if (i==2) {
-            [dragObject setBackgroundColor:[UIColor redColor]];
+            [dragObject setImage:([UIImage imageNamed:@"Button2.jpg"])];
         } else {
-            [dragObject setBackgroundColor:[UIColor greenColor]];
+            [dragObject setImage:([UIImage imageNamed:@"Button3.jpg"])];
         }
         dragObject.tag=i;
         [[self view] addSubview:dragObject];
     }
     
+    _myView.userInteractionEnabled = 0;
     
-    /*
-                         
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    button.frame = CGRectMake(475, 302, 200, 100);
-    
-    [button addTarget:self action:@selector(touched) forControlEvents:UIControlEventTouchDown];
-    [button addTarget:self action:@selector(longPress:) forControlEvents:UIControlEventTouchDragInside];
-    [button setImage:[UIImage imageNamed:@"DragMeInstead!"] forState:UIControlStateNormal];
-    [self.view addSubview:button];*/
+    NSString *storyText = @"Lorem ipsum dolor sit amet, consectetur                  elit. Suspendisse at nibh odio. Praesent dictum accumsan dui at lobortis. Nam eget nibh eget arcu elementum vulputate ut a dui.";
+    _myView.text=storyText;
 	// Do any additional setup after loading the view, typically from a nib.
 }
 /*
@@ -123,4 +134,36 @@
 
 
 
+- (IBAction)myButton:(UIButton *)sender {
+    if (flag==1) {
+        
+        UIAlertView *alertright = [[UIAlertView alloc] initWithTitle:@"Congratulations"
+                                                             message:@"That's the correct answer!"
+                                                            delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alertright show];
+        NSString *storyText = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse at nibh odio. Praesent dictum accumsan dui at lobortis. Nam eget nibh eget arcu elementum vulputate ut a dui.";
+        _myView.text=storyText;
+        [dropTargetImage setUserInteractionEnabled:FALSE];
+        [dropTargetImage setAlpha:(0.0)];
+        [dropTarget setAlpha:(0.0)];
+    }else if (flag==0) {
+        
+        UIAlertView *alertwrong = [[UIAlertView alloc] initWithTitle:@"Incorrect"
+                                                             message:@"Wrong answer! Try again!"
+                                                            delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alertwrong show];
+        [dropTargetImage setBackgroundColor: [UIColor cyanColor]];
+        
+    }
+    
+}
+- (IBAction)resetButton:(UIButton *)sender {
+    
+    [dropTarget setBackgroundColor: [UIColor whiteColor]];
+    [dropTargetImage setBackgroundColor: [UIColor cyanColor]];
+    [dropTargetImage setAlpha:(100.100)];
+    [dropTarget setAlpha:(100.100)];
+    [dropTargetImage setImage:nil];
+    
+}
 @end
