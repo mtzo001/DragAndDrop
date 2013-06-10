@@ -18,10 +18,12 @@
 		00A103D917546AB400DA58E3 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 00A103D817546AB400DA58E3 /* Default-568h@2x.png */; };
 		00A103DC17546AB400DA58E3 /* XYZViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00A103DB17546AB400DA58E3 /* XYZViewController.m */; };
 		00A103DF17546AB400DA58E3 /* XYZViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00A103DD17546AB400DA58E3 /* XYZViewController.xib */; };
-		00F2435217572204000A0B9A /* Button1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 00F2435117572204000A0B9A /* Button1.jpg */; };
-		00F2435417572688000A0B9A /* Button3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 00F2435317572688000A0B9A /* Button3.jpg */; };
-		00F243561757269D000A0B9A /* Button2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 00F243551757269D000A0B9A /* Button2.jpg */; };
-		00F2435A175727F2000A0B9A /* Buttonright.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 00F24359175727F2000A0B9A /* Buttonright.jpg */; };
+		00A21CDC17655D0B00BC96BD /* XYZDropTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = 00A21CDB17655D0B00BC96BD /* XYZDropTarget.m */; };
+		00A21CEF17657BCC00BC96BD /* b1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 00A21CEB17657BCC00BC96BD /* b1.jpg */; };
+		00A21CF017657BCC00BC96BD /* b0.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 00A21CEC17657BCC00BC96BD /* b0.jpg */; };
+		00A21CF117657BCC00BC96BD /* b2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 00A21CED17657BCC00BC96BD /* b2.jpg */; };
+		00A21CF217657BCC00BC96BD /* b3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 00A21CEE17657BCC00BC96BD /* b3.jpg */; };
+		00A21CF417657C6A00BC96BD /* blank.png in Resources */ = {isa = PBXBuildFile; fileRef = 00A21CF317657C6A00BC96BD /* blank.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,10 +43,13 @@
 		00A103DA17546AB400DA58E3 /* XYZViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XYZViewController.h; sourceTree = "<group>"; };
 		00A103DB17546AB400DA58E3 /* XYZViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XYZViewController.m; sourceTree = "<group>"; };
 		00A103DE17546AB400DA58E3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/XYZViewController.xib; sourceTree = "<group>"; };
-		00F2435117572204000A0B9A /* Button1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Button1.jpg; sourceTree = "<group>"; };
-		00F2435317572688000A0B9A /* Button3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Button3.jpg; sourceTree = "<group>"; };
-		00F243551757269D000A0B9A /* Button2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Button2.jpg; sourceTree = "<group>"; };
-		00F24359175727F2000A0B9A /* Buttonright.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Buttonright.jpg; sourceTree = "<group>"; };
+		00A21CDA17655D0B00BC96BD /* XYZDropTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYZDropTarget.h; sourceTree = "<group>"; };
+		00A21CDB17655D0B00BC96BD /* XYZDropTarget.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYZDropTarget.m; sourceTree = "<group>"; };
+		00A21CEB17657BCC00BC96BD /* b1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = b1.jpg; sourceTree = "<group>"; };
+		00A21CEC17657BCC00BC96BD /* b0.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = b0.jpg; sourceTree = "<group>"; };
+		00A21CED17657BCC00BC96BD /* b2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = b2.jpg; sourceTree = "<group>"; };
+		00A21CEE17657BCC00BC96BD /* b3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = b3.jpg; sourceTree = "<group>"; };
+		00A21CF317657C6A00BC96BD /* blank.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blank.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,10 +69,11 @@
 		00A103B617546AB400DA58E3 = {
 			isa = PBXGroup;
 			children = (
-				00F24359175727F2000A0B9A /* Buttonright.jpg */,
-				00F243551757269D000A0B9A /* Button2.jpg */,
-				00F2435317572688000A0B9A /* Button3.jpg */,
-				00F2435117572204000A0B9A /* Button1.jpg */,
+				00A21CF317657C6A00BC96BD /* blank.png */,
+				00A21CEB17657BCC00BC96BD /* b1.jpg */,
+				00A21CEC17657BCC00BC96BD /* b0.jpg */,
+				00A21CED17657BCC00BC96BD /* b2.jpg */,
+				00A21CEE17657BCC00BC96BD /* b3.jpg */,
 				00A103C817546AB400DA58E3 /* DragAndDrop */,
 				00A103C117546AB400DA58E3 /* Frameworks */,
 				00A103C017546AB400DA58E3 /* Products */,
@@ -99,6 +105,8 @@
 				00A103D217546AB400DA58E3 /* XYZAppDelegate.m */,
 				00A103DA17546AB400DA58E3 /* XYZViewController.h */,
 				00A103DB17546AB400DA58E3 /* XYZViewController.m */,
+				00A21CDA17655D0B00BC96BD /* XYZDropTarget.h */,
+				00A21CDB17655D0B00BC96BD /* XYZDropTarget.m */,
 				00A103DD17546AB400DA58E3 /* XYZViewController.xib */,
 				00A103C917546AB400DA58E3 /* Supporting Files */,
 			);
@@ -176,10 +184,11 @@
 				00A103D717546AB400DA58E3 /* Default@2x.png in Resources */,
 				00A103D917546AB400DA58E3 /* Default-568h@2x.png in Resources */,
 				00A103DF17546AB400DA58E3 /* XYZViewController.xib in Resources */,
-				00F2435217572204000A0B9A /* Button1.jpg in Resources */,
-				00F2435417572688000A0B9A /* Button3.jpg in Resources */,
-				00F243561757269D000A0B9A /* Button2.jpg in Resources */,
-				00F2435A175727F2000A0B9A /* Buttonright.jpg in Resources */,
+				00A21CEF17657BCC00BC96BD /* b1.jpg in Resources */,
+				00A21CF017657BCC00BC96BD /* b0.jpg in Resources */,
+				00A21CF117657BCC00BC96BD /* b2.jpg in Resources */,
+				00A21CF217657BCC00BC96BD /* b3.jpg in Resources */,
+				00A21CF417657C6A00BC96BD /* blank.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -193,6 +202,7 @@
 				00A103CF17546AB400DA58E3 /* main.m in Sources */,
 				00A103D317546AB400DA58E3 /* XYZAppDelegate.m in Sources */,
 				00A103DC17546AB400DA58E3 /* XYZViewController.m in Sources */,
+				00A21CDC17655D0B00BC96BD /* XYZDropTarget.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
