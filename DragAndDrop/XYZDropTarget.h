@@ -10,6 +10,8 @@
 
 @interface XYZDropTarget : UIImageView
 
--(void) setPath:(NSString *)name;
+-(NSInteger) getContains;
+-(void) setExpected:(NSInteger)idnum;
+-(Boolean) isCorrect;
 
 @end

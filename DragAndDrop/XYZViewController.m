@@ -16,114 +16,128 @@
 
 @implementation XYZViewController
 
-@synthesize dropTarget;
 @synthesize touchOffset;
 @synthesize homePosition;
-@synthesize dropTargetImage;
-NSInteger flag = 0;
+CGPoint _priorPoint;
+NSMutableArray *homeList;
+NSMutableArray *dragList;
+NSInteger dropTargets = 0;
+NSInteger dragObjects = 0;
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+
+-(void)touchMe:(UITapGestureRecognizer *)recognizer
 {
-    if ([touches count] == 1) {
-        // one finger
-        CGPoint touchPoint = [[touches anyObject] locationInView:self.view];
-        for (UIImageView *iView in self.view.subviews) {
-            if ([iView isMemberOfClass:[UIImageView class]]) {
-                if (touchPoint.x > iView.frame.origin.x &&
-                    touchPoint.x < iView.frame.origin.x + iView.frame.size.width &&
-                    touchPoint.y > iView.frame.origin.y &&
-                    touchPoint.y < iView.frame.origin.y + iView.frame.size.height)
+    UIView *view = recognizer.view;
+    NSInteger tagInt= view.tag;
+    
+    NSValue *homePoint = [homeList objectAtIndex:tagInt];
+    CGPoint p = [homePoint CGPointValue];
+    view.frame = CGRectMake(p.x, p.y,
+                            view.frame.size.width,
+                            view.frame.size.height);
+    
+}
+
+-(void)longPress:(UILongPressGestureRecognizer *)recognizer
+{
+    if(recognizer.state == UIGestureRecognizerStateBegan)
+    {
+        NSLog(@"SETUP");
+        UIView *view = recognizer.view;
+        CGPoint point = [recognizer locationInView:view.superview];
+        _priorPoint=point;
+        //_homePoint =  CGPointMake(view.frame.origin.x, view.frame.origin.y);
+
+        //if needed do some initial setup or init of views here
+    }
+    else if(recognizer.state == UIGestureRecognizerStateChanged)
+    {
+        NSLog(@"PROCESS");
+        //move your views here.
+        //[yourView setFrame:];
+        UIView *view = recognizer.view;
+        CGPoint point = [recognizer locationInView:view.superview];
+        CGPoint center = view.center;
+        center.x += point.x - _priorPoint.x;
+        center.y += point.y - _priorPoint.y;
+        view.center = center;
+    
+    _priorPoint = point;
+    
+
+    }
+    else if(recognizer.state == UIGestureRecognizerStateEnded)
+    {
+        UIView *view = recognizer.view;
+        CGPoint point = [recognizer locationInView:view.superview];
+        
+        for (int i =0; i < dropTargets; i++) {
+            XYZDropTarget *drop = (XYZDropTarget *)[view.superview viewWithTag:10+i];
+            NSInteger containID = [drop getContains];
+            if (point.x > drop.frame.origin.x &&
+                point.x < drop.frame.origin.x + drop.frame.size.width &&
+                point.y > drop.frame.origin.y &&
+                point.y < drop.frame.origin.y + drop.frame.size.height && containID == -1 && ![drop isCorrect])
+            {
+                NSDictionary* idDict = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:view.tag] forKey:@"pass"];
+                [[NSNotificationCenter defaultCenter] postNotificationName: @"dropped" object: nil userInfo:idDict];
+                
+                //view.alpha = 0.0;
+                //view.userInteractionEnabled=FALSE;
+                view.frame = CGRectMake(drop.frame.origin.x, drop.frame.origin.y,
+                                       view.frame.size.width,
+                                       view.frame.size.height);
+            } else {
+                if (containID ==view.tag)
                 {
-                    self.dragObject = iView;
-                    self.touchOffset = CGPointMake(touchPoint.x - iView.frame.origin.x,
-                                                   touchPoint.y - iView.frame.origin.y);
-                    self.homePosition = CGPointMake(iView.frame.origin.x,
-                                                    iView.frame.origin.y);
-                    [self.view bringSubviewToFront:self.dragObject];
+                    [[NSNotificationCenter defaultCenter] postNotificationName: @"empty"
+                                                                        object: nil];
                 }
+                UIView *view = recognizer.view;
+                NSInteger tagInt= view.tag;
+                NSValue *homePoint = [homeList objectAtIndex:tagInt];
+                CGPoint p = [homePoint CGPointValue];
+                view.frame = CGRectMake(p.x, p.y,
+                                        view.frame.size.width,
+                                        view.frame.size.height);
             }
         }
-    }
-}
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    CGPoint touchPoint = [[touches anyObject] locationInView:self.view];
-    CGRect newDragObjectFrame = CGRectMake(touchPoint.x - touchOffset.x,
-                                           touchPoint.y - touchOffset.y,
-                                           self.dragObject.frame.size.width,
-                                           self.dragObject.frame.size.height);
-    self.dragObject.frame = newDragObjectFrame;
-}
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    CGPoint touchPoint = [[touches anyObject] locationInView:self.view];
-    if (touchPoint.x > self.dropTarget.frame.origin.x &&
-        touchPoint.x < self.dropTarget.frame.origin.x + self.dropTarget.frame.size.width &&
-        touchPoint.y > self.dropTarget.frame.origin.y &&
-        touchPoint.y < self.dropTarget.frame.origin.y + self.dropTarget.frame.size.height )
-    {
-        NSString *intStr = [NSString stringWithFormat: @"%d", self.dragObject.tag];
-        if (self.dragObject.tag==0) {
-            [[NSNotificationCenter defaultCenter] postNotificationName: intStr
-                                                                object: nil];
-        } else if (self.dragObject.tag==1) {
-            [[NSNotificationCenter defaultCenter] postNotificationName: intStr
-                                                                object: nil];
-        } else if (self.dragObject.tag==2) {
-            [[NSNotificationCenter defaultCenter] postNotificationName: intStr
-                                                                object: nil];
-        } else if (self.dragObject.tag==3) {
-            [[NSNotificationCenter defaultCenter] postNotificationName: intStr
-                                                                object: nil];
-        }
+        
+        
+        NSLog(@"CLEANUP");
+        //else do cleanup
     }
     
-        
-    self.dragObject.frame = CGRectMake(self.homePosition.x, self.homePosition.y,
-                                       self.dragObject.frame.size.width,
-                                       self.dragObject.frame.size.height);
-}
-
-
--(void)setTrue:(NSNotification*)notification
-{
-    flag=1;
-}
-
--(void)setFalse:(NSNotification*)notification
-{
-    flag=0;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+  
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(setFalse:)
-                                                 name: @"flag0"
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(setTrue:)
-                                                 name: @"flag1"
-                                               object:nil];
-    
-    
-    for (int i = 0;i<2;i++){
+    dropTargets = 1;
+    dragObjects = 4;
+    homeList = [[NSMutableArray alloc] init];
+    for (int i = 0;i<dropTargets;i++){
         
-        XYZDropTarget *DT = [[XYZDropTarget alloc] initWithFrame:CGRectMake(312, 257+i*200, 189, 41)];
+        XYZDropTarget *DT = [[XYZDropTarget alloc] initWithFrame:CGRectMake(312, 257+i*200, 188, 41)];
+        [DT setExpected:1];
         [self.view addSubview:DT];
-        DT.tag=i;
+        
+        DT.tag=10+i;
         DT.backgroundColor = [UIColor greenColor];
     }
     //[DT setPath:(@"Done!")];
     
     
-    for (int i=0; i<4; i++) {
-        
+    dragList = [[NSMutableArray alloc] init];
+    for (int i=0; i<dragObjects; i++) {
         
         // creates the boxes
         UIImageView *dragObject = [[UIImageView alloc] initWithFrame:CGRectMake(100+i*200, 100, 188, 41)];
+        [dragList insertObject: dragObject atIndex:i];
+        
+        [homeList insertObject:[NSValue valueWithCGPoint:CGPointMake(100+i*200,100) ] atIndex:i];
         if (i==0) {
             [dragObject setImage:([UIImage imageNamed:@"b0.jpg"])];
         } else if (i==1) {
@@ -133,8 +147,17 @@ NSInteger flag = 0;
         } else {
             [dragObject setImage:([UIImage imageNamed:@"b3.jpg"])];
         }
+        
+        //UITapGestureRecognizer *tapped = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(touchMe:)];
+        //tapped.numberOfTapsRequired = 1;
+        //[dragObject addGestureRecognizer:tapped];
+        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
+        longPress.minimumPressDuration = 0.01;
+        //[longPress requireGestureRecognizerToFail:tapped];
+        [dragObject addGestureRecognizer:longPress];
         dragObject.tag=i;
-        [[self view] addSubview:dragObject];
+        dragObject.userInteractionEnabled=YES;
+        [self.view addSubview:dragObject];
     }
     
     _myView.userInteractionEnabled = 0;
@@ -156,34 +179,74 @@ NSInteger flag = 0;
     NSDictionary* correct = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:1] forKey:@"pass"];
     NSDictionary* incorrect = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:0] forKey:@"pass"];
     
-    if (flag==1) {
+    
+    for (int i =0; i < dropTargets; i++) {
+        XYZDropTarget *drop = (XYZDropTarget *)[self.view viewWithTag:10+i];
+        if ([drop isCorrect]) {
+            drop.backgroundColor = [UIColor clearColor];
+            int correctIndex = [drop getContains];
+            UIImageView *drag = [dragList objectAtIndex:correctIndex];//(UIImageView *)[self.view viewWithTag:i];
+            [drag setImage:([UIImage imageNamed:@"blank.png"])];
+            [drag setUserInteractionEnabled:false];
+        }
+    }
+    /*
+    for (int i =0; i < dragObjects; i++) {
+        UIImageView *drag = (UIImageView *)[self.view viewWithTag:i];
+        NSValue *homePoint = [homeList objectAtIndex:i];
+        CGPoint p = [homePoint CGPointValue];
+        drag.frame = CGRectMake(p.x, p.y, drag.frame.size.width, drag.frame.size.height);
+
+    }*/
+    for (int i =0; i < dropTargets; i++) {
+        XYZDropTarget *drop = (XYZDropTarget *)[self.view viewWithTag:10+i];
+        if (![drop isCorrect]) {
+            UIAlertView *alertwrong = [[UIAlertView alloc] initWithTitle:@"check"
+                                                                 message:@"Wrong answer! Try again!"
+                                                                delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alertwrong show];
+            [[NSNotificationCenter defaultCenter] postNotificationName: @"check" object: nil userInfo:incorrect];
+            break;
+        }
+        if (i==dropTargets-1) {
+            UIAlertView *alertright = [[UIAlertView alloc] initWithTitle:@"Congratulations"
+                                                                 message:@"That's the correct answer!"
+                                                                delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alertright show];
+            NSString *storyText = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse at nibh odio. Praesent dictum accumsan dui at lobortis. Nam eget nibh eget arcu elementum vulputate ut a dui.";
+            _myView.text=storyText;
+
+        }
+    }
+    
+    for (int i =0; i < dragObjects; i++) {
+        UIImageView *drag = [dragList objectAtIndex:i];//(UIImageView *)[self.view viewWithTag:i];
         
-        UIAlertView *alertright = [[UIAlertView alloc] initWithTitle:@"Congratulations"
-                                                             message:@"That's the correct answer!"
-                                                            delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alertright show];
-        NSString *storyText = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse at nibh odio. Praesent dictum accumsan dui at lobortis. Nam eget nibh eget arcu elementum vulputate ut a dui.";
-        _myView.text=storyText;
-        [dropTargetImage setUserInteractionEnabled:FALSE];
-        [dropTarget setAlpha:(0.0)];
-        [[NSNotificationCenter defaultCenter] postNotificationName: @"check" object: nil userInfo:correct];
-    }else if (flag==0) {
-        
-        UIAlertView *alertwrong = [[UIAlertView alloc] initWithTitle:@"check"
-                                                             message:@"Wrong answer! Try again!"
-                                                            delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alertwrong show];
-        [[NSNotificationCenter defaultCenter] postNotificationName: @"check" object: nil userInfo:incorrect];
-        
+        NSInteger tagInt= drag.tag;
+        NSValue *homePoint = [homeList objectAtIndex:tagInt];
+        CGPoint p = [homePoint CGPointValue];
+        drag.frame = CGRectMake(p.x, p.y,
+                                drag.frame.size.width,
+                                drag.frame.size.height);
+
     }
     
 }
 - (IBAction)resetButton:(UIButton *)sender {
+    UIAlertView *alertright = [[UIAlertView alloc] initWithTitle:@"OI"
+                                                         message:@"This button is deprecated!"
+                                                        delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alertright show];
     NSDictionary* incorrect = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:0] forKey:@"pass"];
     NSString *storyText = @"Lorem ipsum dolor sit amet, consectetur                  elit. Suspendisse at nibh odio. Praesent dictum accumsan dui at lobortis. Nam eget nibh eget arcu elementum vulputate ut a dui.";
     _myView.text=storyText;
     [[NSNotificationCenter defaultCenter] postNotificationName: @"check" object: nil userInfo:incorrect];
-    flag=0;
+    for (int i =0; i < dragObjects; i++) {
+        UIImageView *dragObject = (UIImageView *)[self.view viewWithTag:i];
+            dragObject.alpha = 1.0;
+            //view.userInteractionEnabled=FALSE;
+    }
+
     
 }
 @end
