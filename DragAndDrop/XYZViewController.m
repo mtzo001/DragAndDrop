@@ -176,9 +176,6 @@ NSInteger dragObjects = 0;
 
 - (IBAction)myButton:(UIButton *)sender {
     
-    NSDictionary* correct = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:1] forKey:@"pass"];
-    NSDictionary* incorrect = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:0] forKey:@"pass"];
-    
     
     for (int i =0; i < dropTargets; i++) {
         XYZDropTarget *drop = (XYZDropTarget *)[self.view viewWithTag:10+i];
@@ -205,7 +202,6 @@ NSInteger dragObjects = 0;
                                                                  message:@"Wrong answer! Try again!"
                                                                 delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alertwrong show];
-            [[NSNotificationCenter defaultCenter] postNotificationName: @"check" object: nil userInfo:incorrect];
             break;
         }
         if (i==dropTargets-1) {

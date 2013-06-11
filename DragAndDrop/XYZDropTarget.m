@@ -41,19 +41,7 @@ NSInteger expected = -11;
 -(Boolean)isCorrect
 {
     return correct;
-}
-
--(void)checker:(NSNotification *)sender{
-    int check = [[[sender userInfo] valueForKey:@"pass"] intValue];
-    if (check==0 ) {
-        [self setImage:([UIImage imageNamed:@"blank.png"])];
-        [self setBackgroundColor:[UIColor greenColor]];
-        [self setAlpha:(1.0)];
-    } else {
-        [self setAlpha:(0.0)];
-    }
-}
- 
+} 
 
 
 
@@ -66,10 +54,6 @@ NSInteger expected = -11;
 												 selector:@selector(dropNotification:)
 													 name: @"dropped"
 												   object:nil];
-        /*[[NSNotificationCenter defaultCenter] addObserver:self
-												 selector:@selector(checker:)
-													 name: @"check"
-												   object:nil];*/
         [[NSNotificationCenter defaultCenter] addObserver:self
 												 selector:@selector(empty:)
 													 name: @"empty"
