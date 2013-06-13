@@ -7,40 +7,49 @@
 //
 
 #import "XYZDropTarget.h"
-NSInteger contains = -1;
-Boolean correct = false;
-NSInteger expected = -11;
 
 @implementation XYZDropTarget
+@synthesize contains;
+@synthesize correct;
+@synthesize expected;
 
 -(void)dropNotification:(NSNotification *)sender{
     //NSLog(pathname);
     //[self setImage:([UIImage imageNamed:@"b0.jpg"])];
+    int checkID = [[[sender userInfo] valueForKey:@"target"] intValue];
     
-    int check = [[[sender userInfo] valueForKey:@"pass"] intValue];
-    NSLog([NSString stringWithFormat: @"%d", check]);
-    if (check==expected) {
-        correct=true;
-        //[[NSNotificationCenter defaultCenter] postNotificationName: @"flag1" object: nil];
-    } else {
-        correct=false;
-        //[[NSNotificationCenter defaultCenter] postNotificationName: @"flag0" object: nil];
+    if (checkID == self.tag) {
+        int check = [[[sender userInfo] valueForKey:@"object"] intValue];
+        self.contains=check;
     }
-    contains=check;
+    
     
 }
 
+-(void)emptyAll:(NSNotification *)sender{
+    int checkID = [[[sender userInfo] valueForKey:@"target"] intValue];
+    int checkTag = [[[sender userInfo] valueForKey:@"object"] intValue];
+    if (contains == checkTag) {
+        if (checkID!=self.tag) {
+            self.contains=-1;
+        }
+    }
+}
+
 -(void)empty:(NSNotification *)sender{
-    //NSLog(@"BOOM");
-    //[self setImage:([UIImage imageNamed:@"b3.jpg"])];
-    [[NSNotificationCenter defaultCenter] postNotificationName: @"flag0" object: nil];
-    contains=-1;
-    NSLog(@"Emptied");
+    int checkID = [[[sender userInfo] valueForKey:@"target"] intValue];
+    if (checkID==self.tag) {
+        self.contains=-1;
+    }
 }
 
 -(Boolean)isCorrect
 {
-    return correct;
+    
+    self.correct=(self.contains==self.expected);
+        
+    
+    return self.correct;
 } 
 
 
@@ -55,9 +64,15 @@ NSInteger expected = -11;
 													 name: @"dropped"
 												   object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(emptyAll:)
+													 name: @"emptyAll"
+												   object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
 												 selector:@selector(empty:)
 													 name: @"empty"
 												   object:nil];
+        self.contains=-1;
+        self.correct=false;
     }
     return self;
 }
@@ -65,12 +80,7 @@ NSInteger expected = -11;
 
 -(NSInteger)getContains
 {
-    return contains;
-}
-
--(void)setExpected:(NSInteger)idnum
-{
-    expected=idnum;
+    return self.contains;
 }
 
 /*

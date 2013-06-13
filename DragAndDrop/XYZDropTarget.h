@@ -10,6 +10,10 @@
 
 @interface XYZDropTarget : UIImageView
 
+@property NSInteger contains;
+@property Boolean correct;
+@property NSInteger expected;
+
 -(NSInteger) getContains;
 -(void) setExpected:(NSInteger)idnum;
 -(Boolean) isCorrect;
