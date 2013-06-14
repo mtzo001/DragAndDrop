@@ -23,7 +23,7 @@ NSMutableArray *homeList;
 NSMutableArray *dragList;
 NSInteger dropTargets = 0;
 NSInteger dragObjects = 0;
-NSInteger currentCorrect = 0;
+NSMutableArray *currentCorrect;
 
 
 -(void)touchMe:(UITapGestureRecognizer *)recognizer
@@ -119,21 +119,22 @@ NSInteger currentCorrect = 0;
 {
     [super viewDidLoad];
   
-    currentCorrect = 0;
     dropTargets = 2;
     dragObjects = 4;
     homeList = [[NSMutableArray alloc] init];
     /*
      Create the drop targets
      */
+    currentCorrect = [[NSMutableArray alloc] init];
     for (int i = 0;i<dropTargets;i++){
         
-        XYZDropTarget *DT = [[XYZDropTarget alloc] initWithFrame:CGRectMake(312, 147+i*200, 188, 41)];
+        XYZDropTarget *DT = [[XYZDropTarget alloc] initWithFrame:CGRectMake(151, 98+i*140, 188, 41)];
         [DT setExpected:i+1];
         [self.view addSubview:DT];
         
         DT.tag=10+i;
         DT.backgroundColor = [UIColor greenColor];
+        [currentCorrect insertObject:[NSNumber numberWithInt:0] atIndex:i];
     }
     
     
@@ -169,7 +170,7 @@ NSInteger currentCorrect = 0;
     
     _myView.userInteractionEnabled = 0;
     
-    NSString *storyText = @"Lorem ipsum dolor sit amet, consectetur                   elit. Suspendisse at nibh odio. Praesent dictum accumsan dui at lobortis. Nam eget nibh eget arcu elementum                   ut a dui.";
+    NSString *storyText = @"To                   the crime, Heracles was required to carry out ten labors set by his archenemy. If    he                  , he would be purified of his sin and, as myth says, he would be granted immortality.";
     _myView.text=storyText;
 	// Do any additional setup after loading the view, typically from a nib.
 }
@@ -194,67 +195,90 @@ NSInteger currentCorrect = 0;
                                                          message:@"That's the correct answer!"
                                                         delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     
-    int correctCount = 0;
-    NSString *storyText = @"Lorem ipsum dolor sit amet, consectetur                   elit. Suspendisse at nibh odio. Praesent dictum accumsan dui at lobortis. Nam eget nibh eget arcu elementum                   ut a dui.";
-    for (int i =0; i < dropTargets; i++) {
-        XYZDropTarget *drop = (XYZDropTarget *)[self.view viewWithTag:10+i];
-                
-        if (![drop isCorrect]) {
-            //[alertwrong show];
-        } else {
-            correctCount++;
-        }
-    }
-    
-    //TODO currentCorrect
-    
-    if (correctCount == dropTargets) {
-        [alertright show];
-        storyText = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse at nibh odio. Praesent dictum accumsan dui at lobortis. Nam eget nibh eget arcu elementum vulputate ut a dui.";
-    } else if (correctCount != 0) {
-        XYZDropTarget *drop = (XYZDropTarget *)[self.view viewWithTag:10];
-        if (![drop isCorrect]) {
-            storyText = @"Lorem ipsum dolor sit amet, consectetur                   elit. Suspendisse at nibh odio. Praesent dictum accumsan dui at lobortis. Nam eget nibh eget arcu elementum vulputate ut a dui.";
-        } else {
-            storyText = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse at nibh odio. Praesent dictum accumsan dui at lobortis. Nam eget nibh eget arcu elementum                   ut a dui.";
-        }
-        [alertprogress show];
-    } else {
-        [alertwrong show];
-    }
-    _myView.text=storyText;
-    
-    for (int i =0; i < dropTargets; i++) {
-        int dropID = 10+i;
-        XYZDropTarget *drop = (XYZDropTarget *)[self.view viewWithTag:dropID];
-        NSLog(@"contains: %d", drop.contains);
-        if ([drop isCorrect]) {
-            drop.backgroundColor = [UIColor clearColor];
-            int correctIndex = [drop getContains];
-            
-            UIImageView *drag = [dragList objectAtIndex:correctIndex];
-            
-            [drag setImage:([UIImage imageNamed:@"blank.png"])];
-            [drag setUserInteractionEnabled:false];
-        } else {
-            NSDictionary* dropDict = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:dropID] forKey: @"target"];
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName: @"empty" object: nil userInfo:dropDict];
-        }
-        
-        
-    }
-    for (int i =0; i < dragObjects; i++) {
-        UIImageView *drag = [dragList objectAtIndex:i];
-        
-        NSInteger tagInt= drag.tag;
-        NSValue *homePoint = [homeList objectAtIndex:tagInt];
-        CGPoint p = [homePoint CGPointValue];
-        drag.frame = CGRectMake(p.x, p.y,
-                                drag.frame.size.width,
-                                drag.frame.size.height);
 
+    NSString *storyText = @"To                   the crime, Heracles was required to carry out ten labors set by his archenemy. If    he                  , he would be purified of his sin and, as myth says, he would be granted immortality.";
+    
+    
+    int oldCount =0;
+    for (int i = 0; i < dropTargets; i++){
+        if ([[currentCorrect objectAtIndex:i]intValue] == 1) {
+            oldCount++;
+        }
     }
+    
+    if (oldCount != dropTargets) {
+        for (int i =0; i < dropTargets; i++) {
+            XYZDropTarget *drop = (XYZDropTarget *)[self.view viewWithTag:10+i];
+            
+            if (![drop isCorrect]) {
+                //[alertwrong show];
+            } else {
+                if ([[currentCorrect objectAtIndex:i]intValue] != 1) {
+                    [currentCorrect insertObject:[NSNumber numberWithInt:1] atIndex:i];
+                }
+                
+            }
+        }
+        
+        int countCorrect =0;
+        for (int i = 0; i < dropTargets; i++){
+            if ([[currentCorrect objectAtIndex:i]intValue] == 1) {
+                countCorrect++;
+            }
+        }
+        if (countCorrect == dropTargets) {
+            [alertright show];
+            storyText = @"To expiate the crime, Heracles was required to carry out ten labors set by his archenemy. If he succeeded, he would be purified of his sin and, as myth says, he would be granted immortality.";
+            _myView.text=storyText;
+        } else if (countCorrect > 0 && countCorrect-oldCount!=0) {
+            XYZDropTarget *drop = (XYZDropTarget *)[self.view viewWithTag:10];
+            if ([[currentCorrect objectAtIndex:1]intValue] == 1) {
+                storyText = @"To                   the crime, Heracles was required to carry out ten labors set by his archenemy. If he succeeded, he would be purified of his sin and, as myth says, he would be granted immortality.";
+            } else {
+                storyText = @"To expiate the crime, Heracles was required to carry out ten labors set by his archenemy. If    he                  , he would be purified of his sin and, as myth says, he would be granted immortality.";
+            }
+            _myView.text=storyText;
+            [alertprogress show];
+        } else {
+            [alertwrong show];
+        }
+        
+        
+        for (int i =0; i < dropTargets; i++) {
+            int dropID = 10+i;
+            XYZDropTarget *drop = (XYZDropTarget *)[self.view viewWithTag:dropID];
+            NSLog(@"contains: %d", drop.contains);
+            if ([drop isCorrect]) {
+                drop.backgroundColor = [UIColor clearColor];
+                int correctIndex = [drop getContains];
+                
+                UIImageView *drag = [dragList objectAtIndex:correctIndex];
+                
+                [drag setImage:([UIImage imageNamed:@"blank.png"])];
+                [drag setUserInteractionEnabled:false];
+            } else {
+                NSDictionary* dropDict = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:dropID] forKey: @"target"];
+                
+                [[NSNotificationCenter defaultCenter] postNotificationName: @"empty" object: nil userInfo:dropDict];
+            }
+            
+            
+        }
+        for (int i =0; i < dragObjects; i++) {
+            UIImageView *drag = [dragList objectAtIndex:i];
+            
+            NSInteger tagInt= drag.tag;
+            NSValue *homePoint = [homeList objectAtIndex:tagInt];
+            CGPoint p = [homePoint CGPointValue];
+            drag.frame = CGRectMake(p.x, p.y,
+                                    drag.frame.size.width,
+                                    drag.frame.size.height);
+            
+        }
+    }
+    
+    
+    
     
 }
 @end
