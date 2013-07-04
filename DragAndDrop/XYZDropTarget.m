@@ -52,6 +52,10 @@
     return self.correct;
 } 
 
+-(void)die
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 
 - (id)initWithFrame:(CGRect)frame

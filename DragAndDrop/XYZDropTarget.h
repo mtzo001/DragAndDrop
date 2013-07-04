@@ -17,5 +17,6 @@
 -(NSInteger) getContains;
 -(void) setExpected:(NSInteger)idnum;
 -(Boolean) isCorrect;
+-(void) die;
 
 @end
