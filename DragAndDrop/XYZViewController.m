@@ -25,8 +25,13 @@ NSInteger dragObjects = 0;
 NSInteger textViewOffsetX = 0;
 NSInteger textViewOffsetY = 4;
 NSMutableArray *currentCorrect;
+NSMutableArray *pageList;
+NSInteger pageNumber = 0;
 NSString *unitString = @"!!FiLLSTRiN!!";
 NSString *storyText = @"";
+NSInteger currentScore = 0;
+NSInteger totalPages = 0;
+NSInteger totalCorrect = 0;
 
 
 -(void)touchMe:(UITapGestureRecognizer *)recognizer
@@ -116,12 +121,23 @@ NSString *storyText = @"";
 {
     [super viewDidLoad];
     
-    homeList = [[NSMutableArray alloc] init];
-    
-    currentCorrect = [[NSMutableArray alloc] init];
+    pageList = [[NSMutableArray alloc] init];
     storyText = @"To ##expiate## the crime, Heracles was required to carry out ten labors set by his archenemy. If he ##succeeded##, he would be purified of his sin and, as myth says, he would be granted immortality. @@expiate@@ @@expate@@ @@commit@@ @@expatriat@@ @@succeeded@@ @@suceeded@@ @@succeedded@@ @@failed@@ ";
     
-    [self loadPage:storyText];
+    [pageList insertObject:storyText atIndex:0];
+    
+    storyText = @"Heracles ##accomplished## these tasks, but Eurystheus did not ##accept## the cleansing of the Augean stables because Heracles was going to accept pay for the labor. @@accomplished@@ @@acomplished@@ @@passed@@ @@complete@@ @@accept@@ @@except@@ @@okay@@ @@see@@ ";
+    
+    [pageList insertObject:storyText atIndex:1];
+    
+    storyText = @"##Neither## did he accept the killing of the Lernaean Hydra as Heracles' nephew, Iolaus, had helped him burn the stumps of the heads. Eurysteus set two more tasks, which Heracles performed successfully, bringing the total number of tasks up to ##twelve##. @@Neither@@ @@Nor@@ @@Never@@ @@Nevertheless@@ @@twelve@@ @@two@@ @@ten@@ @@fourteen@@ ";
+    
+    [pageList insertObject:storyText atIndex:2];
+    _titleDisplay.text=@"Heracles encyclopedia entry";
+    pageNumber = 0;
+    totalPages = 3;
+    
+    [self loadPage:[pageList objectAtIndex:pageNumber]];
     
     
     _myView.userInteractionEnabled = 0;
@@ -134,6 +150,7 @@ NSString *storyText = @"";
     NSMutableArray *rectList = [[NSMutableArray alloc]init];
     NSMutableArray *wordList = [[NSMutableArray alloc]init];
     
+    currentCorrect = [[NSMutableArray alloc] init];
     NSString *storyText = @"";
     NSString *chara;
     NSString *word = @"";
@@ -209,7 +226,6 @@ NSString *storyText = @"";
         }
     }
 
-    NSLog(storyText);
         
     /*
     NSRange textRange = [storyText rangeOfString:unitString];
@@ -235,7 +251,7 @@ NSString *storyText = @"";
         CGRect result = [[rectList objectAtIndex:i]CGRectValue];
         
         XYZDropTarget *DT = [[XYZDropTarget alloc] initWithFrame:CGRectMake(result.origin.x+_myView.frame.origin.x+textViewOffsetX, result.origin.y+_myView.frame.origin.y+textViewOffsetY, 240, 44)];
-        [DT setExpected:i];
+        [DT setExpected:i*4];
         [self.view addSubview:DT];
         DT.tag=10+i;
         DT.backgroundColor = [UIColor greenColor];
@@ -244,6 +260,8 @@ NSString *storyText = @"";
     }
     
     dragList = [[NSMutableArray alloc] init];
+    
+    homeList = [[NSMutableArray alloc] init];
     for (int i=0; i<dragObjects; i++) {
         
         // creates the boxes
@@ -253,28 +271,28 @@ NSString *storyText = @"";
         [homeList insertObject:[NSValue valueWithCGPoint:CGPointMake(750,100+i*54) ] atIndex:i];
         if ([[wordList objectAtIndex:i] isEqual: @"expiate"]) {
             [dragObject setImage:([UIImage imageNamed:@"b1.jpg"])];
-            dragObject.tag=0;
         } else if (i==1) {
             [dragObject setImage:([UIImage imageNamed:@"b0.jpg"])];
-            dragObject.tag=2;
         } else if (i==2) {
             [dragObject setImage:([UIImage imageNamed:@"b3.jpg"])];
-            dragObject.tag=3;
         } else if (i==3) {
             [dragObject setImage:([UIImage imageNamed:@"b3.jpg"])];
-            dragObject.tag=4;
         } else if ([[wordList objectAtIndex:i] isEqual: @"succeeded"]) {
             [dragObject setImage:([UIImage imageNamed:@"b2.jpg"])];
-            dragObject.tag=1;
         } else if (i==5) {
             [dragObject setImage:([UIImage imageNamed:@"b0.jpg"])];
-            dragObject.tag=5;
         } else if (i==6) {
             [dragObject setImage:([UIImage imageNamed:@"b3.jpg"])];
-            dragObject.tag=6;
         } else if (i==7) {
             [dragObject setImage:([UIImage imageNamed:@"b3.jpg"])];
-            dragObject.tag=7;
+        } else if ([[wordList objectAtIndex:i] isEqual: @"accomplished"]) {
+            [dragObject setImage:([UIImage imageNamed:@"b1.jpg"])];
+        } else if ([[wordList objectAtIndex:i] isEqual: @"accept"]) {
+            [dragObject setImage:([UIImage imageNamed:@"b2.jpg"])];
+        } else if ([[wordList objectAtIndex:i] isEqual: @"Neither"]) {
+            [dragObject setImage:([UIImage imageNamed:@"b1.jpg"])];
+        } else if ([[wordList objectAtIndex:i] isEqual: @"twelve"]) {
+            [dragObject setImage:([UIImage imageNamed:@"b2.jpg"])];
         }
         
         //UITapGestureRecognizer *tapped = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(touchMe:)];
@@ -284,6 +302,7 @@ NSString *storyText = @"";
         longPress.minimumPressDuration = 0.01;
         //[longPress requireGestureRecognizerToFail:tapped];
         [dragObject addGestureRecognizer:longPress];
+        dragObject.tag=i;
         
         dragObject.userInteractionEnabled=YES;
         [self.view addSubview:dragObject];
@@ -297,7 +316,50 @@ NSString *storyText = @"";
     // Dispose of any resources that can be recreated.
 }
 
-
+- (void)cleanPage
+{
+    for (int i =0; i < dropTargets; i++) {
+        int dropID = 10+i;
+        XYZDropTarget *drop = (XYZDropTarget *)[self.view viewWithTag:dropID];
+        //NSLog(@"contains: %d", drop.contains);
+        /*
+         if ([drop isCorrect]) {
+         drop.backgroundColor = [UIColor clearColor];
+         int correctIndex = [drop getContains];
+         
+         UIImageView *drag = [dragList objectAtIndex:correctIndex];
+         
+         [drag setImage:([UIImage imageNamed:@"blank.png"])];
+         [drag setUserInteractionEnabled:false];
+         } else {
+         NSDictionary* dropDict = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:dropID] forKey: @"target"];
+         
+         [[NSNotificationCenter defaultCenter] postNotificationName: @"empty" object: nil userInfo:dropDict];
+         }
+         */
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+        [drop removeFromSuperview];
+        [drop die];
+        
+    }
+    for (int i =0; i < dragObjects; i++) {
+        UIImageView *drag = [dragList objectAtIndex:i];
+        /*
+         NSInteger tagInt= drag.tag;
+         NSValue *homePoint = [homeList objectAtIndex:tagInt];
+         CGPoint p = [homePoint CGPointValue];
+         drag.frame = CGRectMake(p.x, p.y,
+         drag.frame.size.width,
+         drag.frame.size.height);
+         */
+        [drag removeFromSuperview];
+        /*
+         while (drag.gestureRecognizers.count) {
+         [drag removeGestureRecognizer:[drag.gestureRecognizers objectAtIndex:0]];
+         }
+         */
+    }
+}
 
 - (IBAction)myButton:(UIButton *)sender {
     /*
@@ -307,23 +369,25 @@ NSString *storyText = @"";
     UIAlertView *alertprogress = [[UIAlertView alloc] initWithTitle:@"Keep trying!"
                                                             message:@"You got some correct!"
                                                            delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    
-    UIAlertView *alertright = [[UIAlertView alloc] initWithTitle:@"Congratulations"
-                                                         message:@"That's the correct answer!"
+    */
+    UIAlertView *alertfinish = [[UIAlertView alloc] initWithTitle:@"Congratulations"
+                                                         message:@"You've finished the book! This is a placeholder! I'm not sure what should happen now!"
                                                         delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     
-     */
+     
+    NSString *storyText = [pageList objectAtIndex:pageNumber];
     
-    
-    
-    int oldCount =0;
+    int valid = 0;
     for (int i = 0; i < dropTargets; i++){
-        if ([[currentCorrect objectAtIndex:i]intValue] == 1) {
-            oldCount++;
+        XYZDropTarget *drop = (XYZDropTarget *)[self.view viewWithTag:10+i];
+        int cont = drop.getContains;
+        if (cont !=-1) {
+            valid=1;
         }
     }
     
-    if (oldCount != dropTargets) {
+    if (valid==1) {
+        NSLog(@"Points!");
         for (int i =0; i < dropTargets; i++) {
             XYZDropTarget *drop = (XYZDropTarget *)[self.view viewWithTag:10+i];
             
@@ -332,17 +396,15 @@ NSString *storyText = @"";
             } else {
                 if ([[currentCorrect objectAtIndex:i]intValue] != 1) {
                     [currentCorrect insertObject:[NSNumber numberWithInt:1] atIndex:i];
+                    totalCorrect++;
+                    currentScore++;
+                    NSString *point = [NSString stringWithFormat:@"Score: %d",currentScore];
+                    _score.text=point;
                 }
                 
             }
         }
         
-        int countCorrect =0;
-        for (int i = 0; i < dropTargets; i++){
-            if ([[currentCorrect objectAtIndex:i]intValue] == 1) {
-                countCorrect++;
-            }
-        }
         
         NSString *tempText=@"";
         NSString *chara;
@@ -445,9 +507,8 @@ NSString *storyText = @"";
             }
         }
         
+        [pageList replaceObjectAtIndex:pageNumber withObject:tempText];
         storyText=tempText;
-        NSLog(@"Story");
-        NSLog(storyText);
         
         
         
@@ -471,51 +532,87 @@ NSString *storyText = @"";
         }
         */
         
-        for (int i =0; i < dropTargets; i++) {
-            int dropID = 10+i;
-            XYZDropTarget *drop = (XYZDropTarget *)[self.view viewWithTag:dropID];
-            //NSLog(@"contains: %d", drop.contains);
-            /*
-            if ([drop isCorrect]) {
-                drop.backgroundColor = [UIColor clearColor];
-                int correctIndex = [drop getContains];
-                
-                UIImageView *drag = [dragList objectAtIndex:correctIndex];
-                
-                [drag setImage:([UIImage imageNamed:@"blank.png"])];
-                [drag setUserInteractionEnabled:false];
-            } else {
-                NSDictionary* dropDict = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:dropID] forKey: @"target"];
-                
-                [[NSNotificationCenter defaultCenter] postNotificationName: @"empty" object: nil userInfo:dropDict];
+        [self cleanPage];
+        
+        int countCorrect =0;
+        for (int i = 0; i < dropTargets; i++){
+            if ([[currentCorrect objectAtIndex:i]intValue] == 1) {
+                countCorrect++;
             }
-            */
-            [[NSNotificationCenter defaultCenter] removeObserver:self];
-            [drop removeFromSuperview];
-            [drop die];
+        }
+        if ((countCorrect == dropTargets)&&(pageNumber+1<totalPages)) {
+            sleep(2);
+            pageNumber++;
+            [self updatePage];
+            [self loadPage:[pageList objectAtIndex:pageNumber]];
+        } else {
+            [self loadPage:storyText];
+        }
+        
+    }
+    if (totalCorrect == totalPages*2) {
+        [alertfinish show];
+    }
+
+
+}
+- (IBAction)prevPage:(id)sender {
+    if (pageNumber > 0) {
+        pageNumber--;
+        [self cleanPage];
+        [self loadPage:[pageList objectAtIndex:pageNumber]];
+        [self updatePage];
+    }
+}
+
+- (IBAction)nextPage:(id)sender {
+    if (pageNumber < pageList.count-1) {
+        pageNumber++;
+        [self cleanPage];
+        [self loadPage:[pageList objectAtIndex:pageNumber]];
+        [self updatePage];
+    }
     
+}
+
+- (void)updatePage {
+    NSString *pageString = [NSString stringWithFormat:@"%d",pageNumber+1];
+    _pageDisplay.text=pageString;
+}
+- (IBAction)hint:(id)sender {
+    if (dropTargets !=0) {
+        NSInteger r = arc4random()%10;
+        NSInteger s = 10/dropTargets;
+        NSInteger t;
+        if (r<s) {
+            t=0;
+        } else {
+            t=4;
         }
         for (int i =0; i < dragObjects; i++) {
             UIImageView *drag = [dragList objectAtIndex:i];
-            /*
-            NSInteger tagInt= drag.tag;
-            NSValue *homePoint = [homeList objectAtIndex:tagInt];
-            CGPoint p = [homePoint CGPointValue];
-            drag.frame = CGRectMake(p.x, p.y,
-                                    drag.frame.size.width,
-                                    drag.frame.size.height);
-             */
-            [drag removeFromSuperview];
-            /*
-            while (drag.gestureRecognizers.count) {
-                [drag removeGestureRecognizer:[drag.gestureRecognizers objectAtIndex:0]];
+            
+            if (drag.tag == t) {
+                [drag setAlpha:(0.5)];
+                [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(flash:) userInfo:nil repeats:NO];
+                break;
             }
-             */
+            
         }
     }
     
-    [self loadPage:storyText];
-    
-    
+
+}
+
+- (void)flash:(id)sender
+{
+    for (int i =0; i < dragObjects; i++) {
+        UIImageView *drag = [dragList objectAtIndex:i];
+        
+        if (drag.alpha == 0.5) {
+            [drag setAlpha:(1.0)];
+            break;
+        }
+    }
 }
 @end

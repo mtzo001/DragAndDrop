@@ -9,6 +9,13 @@
 #import <UIKit/UIKit.h>
 
 @interface XYZViewController : UIViewController
+@property (weak, nonatomic) IBOutlet UITextView *titleDisplay;
+@property (weak, nonatomic) IBOutlet UITextView *difficulty;
+- (IBAction)hint:(id)sender;
+@property (weak, nonatomic) IBOutlet UITextView *score;
+@property (weak, nonatomic) IBOutlet UITextView *pageDisplay;
+- (IBAction)prevPage:(id)sender;
+- (IBAction)nextPage:(id)sender;
 @property (weak, nonatomic) IBOutlet UIImageView *pageBackground;
 - (IBAction)myButton:(UIButton *)sender;
 @property (nonatomic, strong) UIImageView *dragObject;
