@@ -22,6 +22,8 @@
 		00A21CF017657BCC00BC96BD /* b0.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 00A21CEC17657BCC00BC96BD /* b0.jpg */; };
 		00A21CF217657BCC00BC96BD /* b3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 00A21CEE17657BCC00BC96BD /* b3.jpg */; };
 		00A21CF417657C6A00BC96BD /* blank.png in Resources */ = {isa = PBXBuildFile; fileRef = 00A21CF317657C6A00BC96BD /* blank.png */; };
+		00D7AD57178CCDE100F83F51 /* Heracles.txt in Resources */ = {isa = PBXBuildFile; fileRef = 00D7AD56178CCDE100F83F51 /* Heracles.txt */; };
+		00D7AD5D178CEE6500F83F51 /* dragObj.png in Resources */ = {isa = PBXBuildFile; fileRef = 00D7AD5C178CEE6500F83F51 /* dragObj.png */; };
 		00D97870176AE7F1002150A7 /* b1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 00D9786F176AE7F1002150A7 /* b1.jpg */; };
 		00D97872176AE96E002150A7 /* b2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 00D97871176AE96E002150A7 /* b2.jpg */; };
 /* End PBXBuildFile section */
@@ -48,6 +50,8 @@
 		00A21CEC17657BCC00BC96BD /* b0.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = b0.jpg; sourceTree = "<group>"; };
 		00A21CEE17657BCC00BC96BD /* b3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = b3.jpg; sourceTree = "<group>"; };
 		00A21CF317657C6A00BC96BD /* blank.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blank.png; sourceTree = "<group>"; };
+		00D7AD56178CCDE100F83F51 /* Heracles.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Heracles.txt; sourceTree = "<group>"; };
+		00D7AD5C178CEE6500F83F51 /* dragObj.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dragObj.png; sourceTree = "<group>"; };
 		00D9786F176AE7F1002150A7 /* b1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = b1.jpg; sourceTree = "<group>"; };
 		00D97871176AE96E002150A7 /* b2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = b2.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -70,6 +74,7 @@
 			isa = PBXGroup;
 			children = (
 				00A21CF317657C6A00BC96BD /* blank.png */,
+				00D7AD5C178CEE6500F83F51 /* dragObj.png */,
 				00D9786F176AE7F1002150A7 /* b1.jpg */,
 				00D97871176AE96E002150A7 /* b2.jpg */,
 				00A21CEC17657BCC00BC96BD /* b0.jpg */,
@@ -105,6 +110,7 @@
 				00A103D217546AB400DA58E3 /* XYZAppDelegate.m */,
 				00A103DA17546AB400DA58E3 /* XYZViewController.h */,
 				00A103DB17546AB400DA58E3 /* XYZViewController.m */,
+				00D7AD56178CCDE100F83F51 /* Heracles.txt */,
 				00A21CDA17655D0B00BC96BD /* XYZDropTarget.h */,
 				00A21CDB17655D0B00BC96BD /* XYZDropTarget.m */,
 				00A103DD17546AB400DA58E3 /* XYZViewController.xib */,
@@ -189,6 +195,8 @@
 				00A21CF417657C6A00BC96BD /* blank.png in Resources */,
 				00D97870176AE7F1002150A7 /* b1.jpg in Resources */,
 				00D97872176AE96E002150A7 /* b2.jpg in Resources */,
+				00D7AD57178CCDE100F83F51 /* Heracles.txt in Resources */,
+				00D7AD5D178CEE6500F83F51 /* dragObj.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
